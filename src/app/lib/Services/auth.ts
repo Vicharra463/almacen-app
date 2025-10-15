@@ -2,6 +2,7 @@ import prisma from "../db/db";
 import bcrypt from "bcrypt";
 import { singToken } from "../Token";
 import { NextResponse } from "next/server";
+import { strict } from "assert";
 
 export async function loginUser(users: string, password: string) {
     //buscar 
@@ -21,10 +22,19 @@ export async function loginUser(users: string, password: string) {
             {status: 401}
         );
       }
-      const rol = user.empleado.length > 0 ? user.empleado[0].rol : "Empleado";
-        const token = singToken({ userID: user.id_usuarios,rol });
 
-        return NextResponse.json({message: "Login exitoso", token, user:{id: user.id_usuarios, users: user.users, rol}},{status: 200});
-    
+        const token = singToken({ userID: user.id_usuarios,rol: user.empleado?.[0]?.rol || "Empleado" });
+        
+         
+        const res = NextResponse.json({message: "Login exitoso", user:{id: user.id_usuarios, users: user.users, rol: user.empleado?.[0]?.rol || "Empleado"}},{status: 200});
+
+        res.cookies.set("token", token,{
+          httpOnly: true,
+          secure : process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path : "/",
+        })
+       
+        return res;
 }
 

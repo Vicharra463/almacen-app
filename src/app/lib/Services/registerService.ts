@@ -15,7 +15,7 @@ const empleadoSchema = z.object({
   rol: z.enum(["Empleado", "Administrador"]),
 });
 
-export async function POST(req: NextRequest) {
+export async function register(req: NextRequest) {
   try {
     // 1️⃣ Obtener y validar datos
     const { user, empleado } = await req.json();
@@ -27,37 +27,25 @@ export async function POST(req: NextRequest) {
       where: { users: limpio.users },
       include: { empleado: true },
     });
-
-    // 3️⃣ Si ya existe → validar contraseña y generar token
-    if (usuarioExistente) {
-      const match = await bcrypt.compare(
-        limpio.password,
-        usuarioExistente.passwords || ""
-      );
-
-      if (!match) {
-        return NextResponse.json(
-          { status: 401, message: "Contraseña incorrecta" },
-          { status: 401 }
-        );
-      }
-
-      const token = singToken({
-        id_usuario: usuarioExistente.id_usuarios,
-        id_empleado: usuarioExistente.empleado?.[0]?.empleado_id,
-        rol: usuarioExistente.empleado?.[0]?.rol,
-      });
-
+    
+    if(usuarioExistente){
       return NextResponse.json({
-        status: 200,
-        message: "Inicio de sesión exitoso",
-        token,
-        usuario: usuarioExistente,
-      });
+        message: "el Empleado ya tiene un usuario"
+      })
+
     }
 
     // 4️⃣ Si no existe → crear usuario + empleado
     const hashedPassword = await bcrypt.hash(limpio.password, 12);
+
+    const existente = await prisma.empleado.findFirst({
+      where : { apellido: datosEmpleado.apellido }
+    })
+    if(datosEmpleado.apellido === existente?.apellido){
+      return NextResponse.json({
+        message: "Este empleado ya tiene un usuario"
+      })
+    }
 
     const nuevoUsuario = await prisma.usuarios.create({
       data: {
