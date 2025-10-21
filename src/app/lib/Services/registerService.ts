@@ -2,7 +2,6 @@ import prisma from "../db/db";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { singToken } from "../Token"; // Usa "singToken" como está exportado
 
 const userSchema = z.object({
   users: z.string().min(8, "Se necesita un usuario más largo"),
@@ -27,25 +26,15 @@ export async function register(req: NextRequest) {
       where: { users: limpio.users },
       include: { empleado: true },
     });
-    
-    if(usuarioExistente){
+
+    if (usuarioExistente) {
       return NextResponse.json({
-        message: "el Empleado ya tiene un usuario"
-      })
-
+        message: "el Empleado ya tiene un usuario",
+      });
     }
-
+    
     // 4️⃣ Si no existe → crear usuario + empleado
     const hashedPassword = await bcrypt.hash(limpio.password, 12);
-
-    const existente = await prisma.empleado.findFirst({
-      where : { apellido: datosEmpleado.apellido }
-    })
-    if(datosEmpleado.apellido === existente?.apellido){
-      return NextResponse.json({
-        message: "Este empleado ya tiene un usuario"
-      })
-    }
 
     const nuevoUsuario = await prisma.usuarios.create({
       data: {
@@ -62,24 +51,19 @@ export async function register(req: NextRequest) {
       include: { empleado: true },
     });
 
-    // 5️⃣ Crear token con ambos IDs
-    const token = singToken({
-      id_usuario: nuevoUsuario.id_usuarios,
-      id_empleado: nuevoUsuario.empleado?.[0]?.empleado_id,
-      rol: nuevoUsuario.empleado?.[0]?.rol,
-    });
-
-    return NextResponse.json({
+    const res = NextResponse.json({
       status: 200,
       message: "Usuario y empleado registrados correctamente",
-      token,
       usuario: nuevoUsuario,
     });
+
+    return res;
   } catch (error) {
     console.error(error);
-    const errorMessage = typeof error === "object" && error !== null && "message" in error
-      ? (error as { message: string }).message
-      : String(error);
+    const errorMessage =
+      typeof error === "object" && error !== null && "message" in error
+        ? (error as { message: string }).message
+        : String(error);
     return NextResponse.json(
       { status: 400, message: "Error en el registro", error: errorMessage },
       { status: 400 }

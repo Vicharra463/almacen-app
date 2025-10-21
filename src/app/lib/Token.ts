@@ -7,7 +7,7 @@ const SecretKey = process.env.JWT_SECRET_KEY || "123456";
 
 //Se crea el token de autenticacion para la el middleware de las rutas
 export function singToken(payload: object) {
-  return jwt.sign(payload, SecretKey, { expiresIn: "1h" });
+  return jwt.sign(payload, SecretKey);
 }
 
 interface DecodedToken {
@@ -42,12 +42,13 @@ export async function verifyToken(token: string): Promise<UserToken | null> {
     if(!user){
           return null;
     }
-
-    return {
-        id: user.id_usuarios,
+    
+    const UserToken = {
+         id: user.id_usuarios,
         role: user.empleado[0]?.rol ?? "Empleado",
         Usuario: user.users ?? ""
     }
+    return UserToken;
 
   } catch (error) {
     return null;

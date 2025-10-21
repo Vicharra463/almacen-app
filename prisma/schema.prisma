@@ -15,46 +15,44 @@ model categoria {
 }
 
 model empleado {
-  empleado_id Int      @id @default(autoincrement())
-  nombre      String?  @db.VarChar(50)
-  apellido    String?  @db.VarChar(50)
-  rol         roles    @default(Empleado)
-  id_users    Int
-  usuarios    usuarios @relation(fields: [id_users], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction, map: "fk_empleado")
+  empleado_id Int       @id @default(autoincrement())
+  nombre      String?   @db.VarChar(50)
+  apellido    String?   @db.VarChar(50)
+  rol         roles?    @default(Empleado)
+  id_users    Int?
+  usuarios    usuarios? @relation(fields: [id_users], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model movimiento_inventario {
-  movimiento_id    Int         @id @default(autoincrement())
-  fecha_movimiento DateTime?   @db.Timestamp(6)
-  producto_id      Int
-  usuario_id       Int
-  tipo_movimiento  movimientos
+  movimiento_id    Int          @id @default(autoincrement())
+  fecha_movimiento DateTime?    @default(now()) @db.Timestamp(6)
+  producto_id      Int?
+  usuario_id       Int?
+  tipo_movimiento  movimientos?
   cantidad_movida  Int?
-  oberservaciones  String?     @db.VarChar(500)
-  productos        productos   @relation(fields: [producto_id], references: [id_producto], onDelete: NoAction, onUpdate: NoAction, map: "fk_producto")
-  usuarios         usuarios    @relation(fields: [usuario_id], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuarios")
+  observaciones    String?      @db.VarChar(500)
+  productos        productos?   @relation(fields: [producto_id], references: [id_producto], onDelete: NoAction, onUpdate: NoAction)
+  usuarios         usuarios?    @relation(fields: [usuario_id], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model productos {
   id_producto           Int                     @id @default(autoincrement())
   nombre                String?                 @db.VarChar(50)
-  id_categoria          Int
+  id_categoria          Int?
   description           String?                 @db.VarChar(500)
   movimiento_inventario movimiento_inventario[]
-  categoria             categoria               @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_categoria")
+  categoria             categoria?              @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction)
   stock_ubicacion       stock_ubicacion[]
 }
 
 model stock_ubicacion {
   id_stock_ubicacion Int        @id @default(autoincrement())
-  id_ubicacion       Int
-  id_producto        Int
+  id_ubicacion       Int?
+  id_producto        Int?
   cantidad_ubicacion Int?
-
-  productos productos @relation(fields: [id_producto], references: [id_producto], map: "fk_producto")
-  ubicacion ubicacion @relation(fields: [id_ubicacion], references: [id_ubicacion], map: "fk_ubicacion")
+  productos          productos? @relation(fields: [id_producto], references: [id_producto], onDelete: NoAction, onUpdate: NoAction)
+  ubicacion          ubicacion? @relation(fields: [id_ubicacion], references: [id_ubicacion], onDelete: NoAction, onUpdate: NoAction)
 }
-
 
 model ubicacion {
   id_ubicacion    Int               @id @default(autoincrement())
@@ -65,7 +63,7 @@ model ubicacion {
 
 model usuarios {
   id_usuarios           Int                     @id @default(autoincrement())
-  users                 String?                 @unique @db.VarChar(50) 
+  users                 String?                 @db.VarChar(50)
   passwords             String?                 @db.VarChar(255)
   empleado              empleado[]
   movimiento_inventario movimiento_inventario[]
