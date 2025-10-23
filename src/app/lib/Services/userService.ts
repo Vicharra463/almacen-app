@@ -45,7 +45,7 @@ export async function getAllUsers() {
 export async function getUserById(data: any) {
   try {
     const { id } = idSchema.parse(data);
-    const empleado = await prisma.empleado.findFirst({
+    const empleado = await prisma.empleado.findUnique({
       where: { empleado_id: id },
       include: {
         usuarios: {
