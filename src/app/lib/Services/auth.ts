@@ -49,5 +49,24 @@ export async function loginUser(users: string, password: string) {
     path: "/",
   });
 
-  return console.log(token),res;
+  return res;
+}
+
+export async function logout() {
+
+  const res = NextResponse.json(
+    { message: "Sesión cerrada correctamente" },
+    { status: 200 }
+  );
+
+  
+  res.cookies.set("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+    expires: new Date(0), 
+  });
+
+  return res;
 }

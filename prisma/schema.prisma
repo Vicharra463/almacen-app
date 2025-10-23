@@ -10,61 +10,61 @@ datasource db {
 
 model categoria {
   id_categoria Int         @id @default(autoincrement())
-  nombre       String?     @db.VarChar(50)
+  nombre       String      @db.VarChar(50)
   productos    productos[]
 }
 
 model empleado {
   empleado_id Int       @id @default(autoincrement())
-  nombre      String?   @db.VarChar(50)
-  apellido    String?   @db.VarChar(50)
+  nombre      String    @db.VarChar(50)
+  apellido    String    @db.VarChar(50)
   rol         roles?    @default(Empleado)
   id_users    Int?
-  usuarios    usuarios? @relation(fields: [id_users], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction)
+  usuarios    usuarios? @relation(fields: [id_users], references: [id_usuarios], onUpdate: NoAction, map: "fk_usuario_empleado")
 }
 
 model movimiento_inventario {
-  movimiento_id    Int          @id @default(autoincrement())
-  fecha_movimiento DateTime?    @default(now()) @db.Timestamp(6)
-  producto_id      Int?
-  usuario_id       Int?
-  tipo_movimiento  movimientos?
-  cantidad_movida  Int?
-  observaciones    String?      @db.VarChar(500)
-  productos        productos?   @relation(fields: [producto_id], references: [id_producto], onDelete: NoAction, onUpdate: NoAction)
-  usuarios         usuarios?    @relation(fields: [usuario_id], references: [id_usuarios], onDelete: NoAction, onUpdate: NoAction)
+  movimiento_id    Int         @id @default(autoincrement())
+  fecha_movimiento DateTime?   @default(now()) @db.Timestamp(6)
+  producto_id      Int
+  usuario_id       Int
+  tipo_movimiento  movimientos
+  cantidad_movida  Int
+  observaciones    String?     @db.VarChar(500)
+  productos        productos   @relation(fields: [producto_id], references: [id_producto], onDelete: Cascade, onUpdate: NoAction, map: "fk_producto_mov")
+  usuarios         usuarios    @relation(fields: [usuario_id], references: [id_usuarios], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario_mov")
 }
 
 model productos {
   id_producto           Int                     @id @default(autoincrement())
-  nombre                String?                 @db.VarChar(50)
-  id_categoria          Int?
+  nombre                String                  @db.VarChar(50)
+  id_categoria          Int
   description           String?                 @db.VarChar(500)
   movimiento_inventario movimiento_inventario[]
-  categoria             categoria?              @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction)
+  categoria             categoria               @relation(fields: [id_categoria], references: [id_categoria], onDelete: Cascade, onUpdate: NoAction, map: "fk_categoria")
   stock_ubicacion       stock_ubicacion[]
 }
 
 model stock_ubicacion {
-  id_stock_ubicacion Int        @id @default(autoincrement())
-  id_ubicacion       Int?
-  id_producto        Int?
-  cantidad_ubicacion Int?
-  productos          productos? @relation(fields: [id_producto], references: [id_producto], onDelete: NoAction, onUpdate: NoAction)
-  ubicacion          ubicacion? @relation(fields: [id_ubicacion], references: [id_ubicacion], onDelete: NoAction, onUpdate: NoAction)
+  id_stock_ubicacion Int       @id @default(autoincrement())
+  id_ubicacion       Int
+  id_producto        Int
+  cantidad_ubicacion Int?      @default(0)
+  productos          productos @relation(fields: [id_producto], references: [id_producto], onDelete: Cascade, onUpdate: NoAction, map: "fk_producto_stock")
+  ubicacion          ubicacion @relation(fields: [id_ubicacion], references: [id_ubicacion], onDelete: Cascade, onUpdate: NoAction, map: "fk_ubicacion")
 }
 
 model ubicacion {
   id_ubicacion    Int               @id @default(autoincrement())
-  nombre          String?           @db.VarChar(50)
-  capacidad       Int?
+  nombre          String            @db.VarChar(50)
+  capacidad       Int
   stock_ubicacion stock_ubicacion[]
 }
 
 model usuarios {
   id_usuarios           Int                     @id @default(autoincrement())
-  users                 String?                 @db.VarChar(50)
-  passwords             String?                 @db.VarChar(255)
+  users                 String                  @db.VarChar(50)
+  passwords             String                  @db.VarChar(255)
   empleado              empleado[]
   movimiento_inventario movimiento_inventario[]
 }

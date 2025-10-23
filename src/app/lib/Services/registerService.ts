@@ -32,7 +32,7 @@ export async function register(req: NextRequest) {
         message: "el Empleado ya tiene un usuario",
       });
     }
-    
+
     // 4️⃣ Si no existe → crear usuario + empleado
     const hashedPassword = await bcrypt.hash(limpio.password, 12);
 
@@ -66,6 +66,62 @@ export async function register(req: NextRequest) {
         : String(error);
     return NextResponse.json(
       { status: 400, message: "Error en el registro", error: errorMessage },
+      { status: 400 }
+    );
+  }
+}
+
+const userasginado = z.object({
+  id_empleado: z.number().int(),
+  users: z.string().min(4, "Se necesita un usuario más largo"),
+  password: z.string().min(4, "Se necesita una contraseña más larga"),
+});
+export async function registeruser(req: NextRequest) {
+  try {
+    const json = await req.json();
+    const data = userasginado.parse(json);
+    const hashedPassword = await bcrypt.hash(data.password, 12);
+
+    const empleadoExistente = await prisma.empleado.findUnique({
+      where: { empleado_id: data.id_empleado },
+    });
+
+    if (!empleadoExistente) {
+      return NextResponse.json({
+        status: 404,
+        message: "Empleado no encontrado",
+      });
+    }
+
+    if (empleadoExistente.id_users) {
+      return NextResponse.json({
+        status: 400,
+        message: "El empleado ya tiene un usuario asignado",
+      });
+    }
+
+    const user = prisma.usuarios.create({
+      data: {
+        users: data.users,
+        passwords: hashedPassword,
+      },
+    });
+    const empleado = await prisma.empleado.update({
+      where: { empleado_id: data.id_empleado },
+      data: {
+        id_users: (await user).id_usuarios,
+      },
+    });
+    const nombre = empleado.nombre;
+    return NextResponse.json({
+      status: 200,
+      mensaje: "el usuario se creo y se asigno al empleado",
+      nombre,
+      user: { users: true },
+    });
+  } catch (e) {
+    return NextResponse.json(
+      { status: 400, message: "Error en el registro", error: e },
       { status: 400 }
     );
   }
