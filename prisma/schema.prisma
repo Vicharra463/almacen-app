@@ -63,7 +63,7 @@ model ubicacion {
 
 model usuarios {
   id_usuarios           Int                     @id @default(autoincrement())
-  users                 String                  @db.VarChar(50)
+  users                 String                  @unique@db.VarChar(50)
   passwords             String                  @db.VarChar(255)
   empleado              empleado[]
   movimiento_inventario movimiento_inventario[]
