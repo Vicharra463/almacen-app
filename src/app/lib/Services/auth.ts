@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function loginUser(users: string, password: string) {
   //buscar
-  const user = await prisma.usuarios.findFirst({
+  const user = await prisma.usuarios.findUnique({
     where: { users },
     include: {
       empleado: true,
