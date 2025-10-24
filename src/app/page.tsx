@@ -14,7 +14,7 @@ export default function Home() {
     try {
       await login(e);
       // Usa window.location para client-side redirect
-      console.log("redirigiendo")
+      console.log("redirigiendo a el dashboard")
       window.location.href = "/dashboard";
     } catch (err: any) {
       seterror(err.message);
