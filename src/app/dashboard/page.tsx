@@ -1,24 +1,29 @@
 import { cookies } from 'next/headers';
-import { verifyToken } from '../lib/Token';
 import { redirect } from 'next/navigation';
+import { verifyToken } from '../lib/Token';
 
 export default async function Dashboard() {
   const cookieStore = await cookies();
-  // Esto solo pregunta si existe, pero el resultado sigue siendo string | undefined
   const token = cookieStore.get('token')?.value;
-  // Si no existe, redirige
-    if (!token) {
-    redirect('/'); 
+  
+  if (!token) {
+    redirect('/');
   }
+  
   const user = await verifyToken(token);
-
-    if (!user) {
-    redirect('/'); 
+  
+  if (!user) {
+    redirect('/');
   }
+  
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Token: {user.role}</p>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <p>Bienvenido, {user.Usuario}!</p>
+      <p>Rol: {user.role}</p>
     </div>
   );
 }
+
+// ⭐ IMPORTANTE: Esto hace que la página sea dinámica
+export const dynamic = 'force-dynamic';

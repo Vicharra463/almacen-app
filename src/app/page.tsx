@@ -9,17 +9,16 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
   const [error, seterror] = useState("");
- const handlesubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  try {
-     await login(e);
-    
-    router.push("/dashboard");
-  } catch (err: any) {
-    seterror(err.message);
-    // No redirige si hay error
-  }
-};
+  const handlesubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await login(e);
+      // Usa window.location para client-side redirect
+      window.location.href = "/dashboard";
+    } catch (err: any) {
+      seterror(err.message);
+    }
+  };
   return (
     <div>
       <div className="flex justify-start p-2 pl-[40px] items-center border-b-1 border-b-gray-200">
