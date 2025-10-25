@@ -18,9 +18,7 @@ export default async function Dashboard() {
   
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p>Bienvenido, {user.Usuario}!</p>
-      <p>Rol: {user.role}</p>
+      
     </div>
   );
 }
