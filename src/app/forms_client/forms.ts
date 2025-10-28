@@ -1,7 +1,10 @@
 "use client";
 
 import { FormEvent } from "react";
-
+import { StockUbicacion } from "../assets/tipos";
+import { promise } from "zod";
+import { error } from "console";
+import {UbicacionesResponse} from "../assets/tipos"
 export async function login(e: FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
@@ -23,4 +26,18 @@ export async function login(e: FormEvent<HTMLFormElement>) {
   }
 
   return res.json();
+}
+
+export async function getstockcircle(): Promise<StockUbicacion[]> {
+    const res = await fetch("/api/empleado/stock");
+    if(!res.ok) throw new Error(`error en la peticion ${res.status}`);
+    const data = (await res.json()) as StockUbicacion[];
+    return data;
+}
+
+export async function getstockmovimientos(): Promise<UbicacionesResponse> {
+    const res = await fetch("/api/empleado/stock/movimientos");
+    if(!res.ok) throw new Error(`error en la peticion ${res.status}`);
+    const data = (await res.json()) as UbicacionesResponse;
+    return data;
 }

@@ -78,13 +78,6 @@ La estructura de carpetas principal se organiza de la siguiente manera:
 
 ## Documentación de la API
 
-### URL de Producción
-
-Una vez desplegada la aplicación en Vercel, la URL base `http://localhost:3000` será reemplazada por la URL pública asignada por Vercel (o tu dominio personalizado).
-
-- **Ejemplo Local**: `http://localhost:3000/api/empleado/producto`
-- **Ejemplo Producción**: `https://almacen-app.vercel.app/api/empleado/producto` (asumiendo que el nombre del proyecto en Vercel es `almacen-app`)
-
 A continuación se detallan todos los endpoints de la API.
 
 ### Autenticación
@@ -96,15 +89,15 @@ A continuación se detallan todos los endpoints de la API.
 - **Body**:
   ```json
   {
-    "email": "user@example.com",
-    "contrasena": "password123"
+    "users": "user@example.com",
+    "password": "password123"
   }
   ```
 
 #### Cerrar Sesión
 - **Método**: `POST`
 - **Ruta**: `/api/auth/logout`
-- **Descripción**: Cierra la sesión del usuario.
+- **Descripción**: Cierra la sesión del usuario y elimina la cookie del token.
 
 ---
 
@@ -135,10 +128,16 @@ A continuación se detallan todos los endpoints de la API.
   }
   ```
 
-#### Obtener todos los Usuarios
+#### Obtener Usuarios
 - **Método**: `GET`
 - **Ruta**: `/api/admin/users`
-- **Descripción**: Devuelve una lista de todos los usuarios.
+- **Descripción**: Devuelve una lista de todos los usuarios. Si se provee un `id` en el body, devuelve un solo usuario.
+- **Body (Opcional)**:
+  ```json
+  {
+    "id": 1
+  }
+  ```
 
 #### Actualizar Usuario
 - **Método**: `PUT`
@@ -150,6 +149,17 @@ A continuación se detallan todos los endpoints de la API.
     "id": 1,
     "email": "updateduser@example.com",
     "contrasena": "newpassword123"
+  }
+  ```
+
+#### Eliminar Usuario
+- **Método**: `DELETE`
+- **Ruta**: `/api/admin/users`
+- **Descripción**: Elimina un usuario.
+- **Body**:
+  ```json
+  {
+    "id": 1
   }
   ```
 
@@ -172,18 +182,6 @@ A continuación se detallan todos los endpoints de la API.
   ```json
   {
     "nombre": "Nombre de la categoría (mín. 8 caracteres)"
-  }
-  ```
-
-#### Actualizar Categoría
-- **Método**: `PUT`
-- **Ruta**: `/api/empleado/categoria`
-- **Descripción**: Actualiza el nombre de una categoría existente.
-- **Body**:
-  ```json
-  {
-    "id": 1,
-    "nombre": "Nuevo nombre (mín. 8 caracteres)"
   }
   ```
 
@@ -248,27 +246,32 @@ A continuación se detallan todos los endpoints de la API.
 #### Obtener Stock General
 - **Método**: `GET`
 - **Ruta**: `/api/empleado/stock`
-- **Descripción**: Devuelve una lista del stock.
+- **Descripción**: Devuelve una lista del stock de todos los productos en todas las ubicaciones.
 
-#### Registrar Movimiento de Stock
+#### Obtener Movimientos de Inventario
+- **Método**: `GET`
+- **Ruta**: `/api/empleado/stock/movimientos`
+- **Descripción**: Devuelve un historial de todos los movimientos de inventario (entradas, salidas, ajustes).
+
+#### Registrar Movimiento de Inventario
 - **Método**: `POST`
 - **Ruta**: `/api/empleado/stock/movimientos`
-- **Descripción**: Crea un registro de movimiento de stock (para auditoría).
+- **Descripción**: Crea un registro de movimiento de inventario.
 - **Body**:
   ```json
   {
-    "id_producto": 1,
-    "id_ubicacion_origen": 1,
-    "id_ubicacion_destino": 2,
-    "cantidad": 10,
-    "id_usuario": 1
+    "producto_id": 1,
+    "usuario_id": 1,
+    "tipo_movimiento": "Entrada",
+    "cantidad_movida": 10,
+    "observaciones": "Movimiento de prueba"
   }
   ```
 
-#### Obtener Ubicaciones
+#### Obtener Ubicaciones de Stock
 - **Método**: `GET`
 - **Ruta**: `/api/empleado/stock/ubicaciones`
-- **Descripción**: Devuelve todas las ubicaciones del almacén.
+- **Descripción**: Devuelve todas las ubicaciones del almacén con su stock.
 
 #### Crear Ubicación
 - **Método**: `POST`
@@ -277,19 +280,21 @@ A continuación se detallan todos los endpoints de la API.
 - **Body**:
   ```json
   {
-    "nombre": "Nombre de la ubicación (mín. 5)"
+    "nombre": "Nombre de la ubicación (mín. 10)",
+    "capacidad": 100
   }
   ```
 
 #### Actualizar Ubicación
 - **Método**: `PUT`
 - **Ruta**: `/api/empleado/stock/ubicaciones`
-- **Descripción**: Actualiza el nombre de una ubicación.
+- **Descripción**: Actualiza los datos de una ubicación.
 - **Body**:
   ```json
   {
     "id": 1,
-    "nombre": "Nuevo nombre de ubicación (mín. 5)"
+    "nombre": "Nuevo nombre de ubicación",
+    "capacidad": 200
   }
   ```
 
@@ -300,9 +305,9 @@ A continuación se detallan todos los endpoints de la API.
 - **Body**:
   ```json
   {
-    "id_producto": 1,
     "id_ubicacion": 1,
-    "cantidad": 100
+    "id_producto": 1,
+    "cantidad_ubicacion": 100
   }
   ```
 
@@ -313,8 +318,10 @@ A continuación se detallan todos los endpoints de la API.
 - **Body**:
   ```json
   {
-    "id": 1,
-    "cantidad": 150
+    "id_stock_ubicacion": 1,
+    "id_ubicacion": 1,
+    "id_producto": 1,
+    "cantidad_ubicacion": 150
   }
   ```
 
@@ -325,6 +332,6 @@ A continuación se detallan todos los endpoints de la API.
 - **Body**:
   ```json
   {
-    "id": 1
+    "id_stock_ubicacion": 1
   }
   ```

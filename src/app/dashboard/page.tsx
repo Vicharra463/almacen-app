@@ -1,27 +1,42 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { verifyToken } from '../lib/Token';
-
+// app/dashboard/page.tsx
+import { cliente } from "../lib/forms_Server/form";
+import Mediocirculo from "../../Components/MedioCirculo/Mediocir";
+import BarrasVolumen from "../../Components/Barrasvolumen/BarrasVolumen";
+import ProductosPorCategoria from "@/Components/ProductsCategori/ProductosCate";
+import TopProductosStock from "@/Components/ProductosStokc/ProductosStock";
+import Ubicaciones from "@/Components/Ubicaciones/Ubiaciones";
 export default async function Dashboard() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  
+  const token = await cliente();
   if (!token) {
-    redirect('/');
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>No autorizado. Redirigiendo...</p>
+        <meta httpEquiv="refresh" content="0; url=/" />
+      </div>
+    );
   }
-  
-  const user = await verifyToken(token);
-  
-  if (!user) {
-    redirect('/');
-  }
-  
+
   return (
     <div className="p-8">
-      
+      <h1 className="text-2xl font-bold pb-8">Bienvenido al Dashboard</h1>
+      <div className="flex gap-4 pb-4">
+        <div className="flex-1">
+          <ProductosPorCategoria />
+        </div>
+        <div className="flex-1">
+          <BarrasVolumen />
+        </div>
+        <div className="flex-1">
+          <TopProductosStock />
+        </div>
+      </div>
+
+      <div className="flex gap-8">
+        <Mediocirculo />
+        <Ubicaciones />
+      </div>
     </div>
   );
 }
 
-// ⭐ IMPORTANTE: Esto hace que la página sea dinámica
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
