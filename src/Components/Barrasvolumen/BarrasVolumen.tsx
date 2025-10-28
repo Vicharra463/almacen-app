@@ -69,7 +69,7 @@ const ImprovedBarChart = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="bg-white w-[600px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
+    <div className="bg-white w-[510px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-black">Nivel de Ocupación por Almacén</h3>
         <p className="text-sm text-black mt-1">Porcentaje de capacidad utilizada</p>

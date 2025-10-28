@@ -107,7 +107,7 @@ export default function TopProductosStock() {
   const totalStock = chartData.reduce((sum, item) => sum + item.cantidad, 0);
 
   return (
-    <div className="bg-white w-[560px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
+    <div className="bg-white w-[470px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-black">Top Productos con Más Stock</h3>
         <p className="text-sm text-black mt-1">Productos con mayor inventario</p>

@@ -148,7 +148,7 @@ export default function ProductosPorCategoria() {
   const topCategoria = chartData[0];
 
   return (
-    <div className="bg-white w-[550px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
+    <div className="bg-white w-[510px] h-[400px] rounded-lg p-6 shadow-lg overflow-y-auto">
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-black">Productos por Categoría</h3>
         <p className="text-sm text-black mt-1">Top 8 categorías más populares</p>

@@ -20,13 +20,13 @@ export default async function Dashboard() {
     <div className="p-8">
       <h1 className="text-2xl font-bold pb-8">Bienvenido al Dashboard</h1>
       <div className="flex gap-4 pb-4">
-        <div className="flex-1">
+        <div >
           <ProductosPorCategoria />
         </div>
-        <div className="flex-1">
+        <div >
           <BarrasVolumen />
         </div>
-        <div className="flex-1">
+        <div>
           <TopProductosStock />
         </div>
       </div>

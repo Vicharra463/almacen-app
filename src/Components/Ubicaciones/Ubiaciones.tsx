@@ -122,49 +122,50 @@ export default function CapacidadUbicaciones() {
   }
 
   return (
-    <div className="w-[867px] p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-      <h3 className="text-2xl font-bold mb-8 text-center text-gray-800">
-        Capacidad y Uso de Almacén
-      </h3>
+    <div className="w-[700px] p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
+  <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    Capacidad y Uso de Almacén
+  </h3>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={chartData}
-          layout="vertical"
-          margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" domain={[0, 100]} />
-          <YAxis dataKey="nombre" type="category" width={150} />
-          <Tooltip
-            formatter={(value: number, name: string) => {
-              if (name.toLowerCase() === "porcentaje") return `${value.toFixed(1)}%`;
-              return value;
-            }}
-          />
-          <Bar dataKey="porcentaje" radius={[0, 8, 8, 0]}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(entry.porcentaje)} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+  <ResponsiveContainer width="100%" height={250}>
+    <BarChart
+      data={chartData}
+      layout="vertical"
+      margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis type="number" domain={[0, 100]} />
+      <YAxis dataKey="nombre" type="category" width={150} />
+      <Tooltip
+        formatter={(value: number, name: string) => {
+          if (name.toLowerCase() === "porcentaje") return `${value.toFixed(1)}%`;
+          return value;
+        }}
+      />
+      <Bar dataKey="porcentaje" radius={[0, 8, 8, 0]}>
+        {chartData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={getColor(entry.porcentaje)} />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
 
-      <div className="mt-6 flex justify-around text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-green-500"></div>
-          <span>Óptimo (&lt;70%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-amber-500"></div>
-          <span>Alerta (70-90%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-red-500"></div>
-          <span>Crítico (&gt;90%)</span>
-        </div>
-      </div>
+  <div className="mt-4 flex justify-around text-sm">
+    <div className="flex items-center gap-2">
+      <div className="w-4 h-4 rounded bg-green-500"></div>
+      <span>Óptimo (&lt;70%)</span>
     </div>
+    <div className="flex items-center gap-2">
+      <div className="w-4 h-4 rounded bg-amber-500"></div>
+      <span>Alerta (70-90%)</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <div className="w-4 h-4 rounded bg-red-500"></div>
+      <span>Crítico (&gt;90%)</span>
+    </div>
+  </div>
+</div>
+
   );
 }
 
