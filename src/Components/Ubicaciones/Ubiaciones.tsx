@@ -122,9 +122,9 @@ export default function CapacidadUbicaciones() {
   }
 
   return (
-    <div className="w-[700px] p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
+    <div className="w-[715px] p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
   <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">
-    Capacidad y Uso de Almacén
+    Estado de la Capacidad Del Almacen
   </h3>
 
   <ResponsiveContainer width="100%" height={250}>

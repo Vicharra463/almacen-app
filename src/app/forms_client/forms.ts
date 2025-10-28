@@ -5,6 +5,8 @@ import { StockUbicacion } from "../assets/tipos";
 import { promise } from "zod";
 import { error } from "console";
 import {UbicacionesResponse} from "../assets/tipos"
+import {StockUbicacionesResponse} from "../assets/tipos"
+
 export async function login(e: FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
@@ -40,4 +42,10 @@ export async function getstockmovimientos(): Promise<UbicacionesResponse> {
     if(!res.ok) throw new Error(`error en la peticion ${res.status}`);
     const data = (await res.json()) as UbicacionesResponse;
     return data;
+}
+
+export async function getproductos(): Promise<StockUbicacionesResponse> {
+  const res = await fetch("/api/empleado/stock/ubicaciones");
+  if (!res.ok) throw new Error(`Error en la petición ${res.status}`);
+  return (await res.json()) as StockUbicacionesResponse;
 }

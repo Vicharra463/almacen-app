@@ -31,7 +31,7 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex gap-4">
         <Mediocirculo />
         <Ubicaciones />
       </div>

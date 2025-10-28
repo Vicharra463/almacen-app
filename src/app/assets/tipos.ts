@@ -42,3 +42,28 @@ export type UbicacionesResponse = {
   }[];
 };
 
+
+export type StockUbicacionesResponse = {
+  message: string;
+  status: number;
+  data: StockItem[];
+};
+
+export type StockItem = {
+  id_stock_ubicacion: number;
+  id_ubicacion: number;
+  id_producto: number;
+  cantidad_ubicacion: number;
+  ubicacion: {
+    nombre: string;
+    capacidad: number;
+  };
+  productos: {
+    nombre: string;
+    description: string;
+    categoria: {
+      nombre: string;
+    };
+  };
+};
+
