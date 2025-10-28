@@ -1,19 +1,13 @@
-import { cookies } from "next/headers";
+
 import "../app/globals.css";
-import { verifyToken } from "@/app/lib/Token";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-export default async function Sidebar() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+import { cliente } from "@/app/lib/forms_Server/form";
+import Btnsalir from "../Components/btnsalir/btnsalir"
 
-  if (!token) {
-    redirect("/");
-  }
-
-  const user = await verifyToken(token);
-
+export default  async function Sidebar() {
+    const user = await cliente();
   if (!user) {
     redirect("/");
   }
@@ -122,16 +116,7 @@ export default async function Sidebar() {
         <div className=" flex flex-col mt-auto gap-3">
           <h2>Usuario: {user.Usuario}</h2>
           <h2>Rol: {user.role}</h2>
-          <button className="mt-auto cursor-pointer  flex rounded-md gap-2 text-black p-2 hover:bg-red-600/30">
-          <Image
-            src="/icon-salida.png"
-            alt="Logo de TextilPluss"
-            width={25}
-            height={40}
-            priority
-          />
-          <h2>Cerrar sesión</h2>
-        </button>
+         <Btnsalir />
         </div>
       </div>
     </div>

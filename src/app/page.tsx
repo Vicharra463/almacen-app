@@ -3,21 +3,27 @@ import Image from "next/image";
 import "../app/globals.css";
 import Link from "next/link";
 import { useState } from "react";
-import { login } from "../app/forms/login_forms";
+import { login } from "./forms_client/forms";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
   const [error, seterror] = useState("");
+  const [loading, setloading] = useState(false);
+
   const handlesubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setloading(true);
+      seterror("");
       await login(e);
       // Usa window.location para client-side redirect
-      console.log("redirigiendo a el dashboard")
+      console.log("redirigiendo a el dashboard");
       window.location.href = "/dashboard";
     } catch (err: any) {
       seterror(err.message);
+    } finally {
+      setloading(false);
     }
   };
   return (
@@ -85,7 +91,13 @@ export default function Home() {
             >
               Ingresar
             </button>
+            {loading && (
+              <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/60 z-[99]">
+                <p>Cargando...</p>
+              </div>
+            )}
           </form>
+          {error && <p className="text-red-500 mt-3">{error}</p>}
         </div>
       </div>
     </div>
