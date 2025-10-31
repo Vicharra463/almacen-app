@@ -42,7 +42,7 @@ export default async function Sidebar() {
           </Link>
           {user.role === "Administrador" ? (
             <Link
-              href={"/"}
+              href={"/dashboard/usuarios"}
               className="w-full rounded-lg flex justify-start gap-2 p-2 hover:bg-blue-300 transition delay-100 duration-300 items-center"
             >
               <Image
@@ -57,7 +57,7 @@ export default async function Sidebar() {
           ) : null}
 
           <Link
-            href={"/"}
+            href={"/dashboard/categoria"}
             className=" w-full rounded-lg flex justify-start gap-2 p-2 hover:bg-blue-300 transition delay-100 duration-300 items-center"
           >
             <Image
@@ -85,7 +85,7 @@ export default async function Sidebar() {
           </Link>
 
           <Link
-            href={"/"}
+            href={"/dashboard/stock"}
             className=" w-full rounded-lg flex justify-start gap-2 p-2 hover:bg-blue-300 transition delay-100 duration-300 items-center"
           >
             <Image
@@ -99,7 +99,7 @@ export default async function Sidebar() {
           </Link>
 
           <Link
-            href={"/"}
+            href={"/dashboard/movimientos"}
             className=" w-full rounded-lg flex justify-start gap-2 p-2 hover:bg-blue-300 transition delay-100 duration-300 items-center"
           >
             <Image

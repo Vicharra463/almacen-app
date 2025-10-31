@@ -44,8 +44,10 @@ export async function getstockmovimientos(): Promise<UbicacionesResponse> {
     return data;
 }
 
+
 export async function getproductos(): Promise<StockUbicacionesResponse> {
   const res = await fetch("/api/empleado/stock/ubicaciones");
   if (!res.ok) throw new Error(`Error en la petición ${res.status}`);
   return (await res.json()) as StockUbicacionesResponse;
 }
+

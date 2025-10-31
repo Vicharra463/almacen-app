@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { getproductos } from "@/app/forms_client/forms";
 import { StockUbicacionesResponse } from "@/app/assets/tipos";
 import Image from "next/image";
+import { Cargando } from "@/Components/Loading/Loading";
+import { Error } from "@/Components/Error/Error";
 export default function DashboardClient() {
   const [data, setData] = useState<StockUbicacionesResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [paginaActual, setPaginaActual] = useState(1);
-  const porPagina = 14; // cantidad de filas por página
+  const porPagina = 14;
   const [isOpen, setisOpen] = useState(false);
   useEffect(() => {
     getproductos()
@@ -16,15 +18,15 @@ export default function DashboardClient() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Cargando productos...</p>;
-  if (!data) return <p>Error al cargar los datos</p>;
+  if (loading) return <Cargando />;
+  if (!data) return <Error />;
 
-  // Ordenar por id
+
   const ordenados = [...data.data].sort(
     (a, b) => a.id_stock_ubicacion - b.id_stock_ubicacion
   );
 
-  // Calcular productos a mostrar según la página
+ 
   const indexInicio = (paginaActual - 1) * porPagina;
   const indexFin = indexInicio + porPagina;
   const paginaData = ordenados.slice(indexInicio, indexFin);

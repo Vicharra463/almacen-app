@@ -1,5 +1,3 @@
-import { stock_ubicacion } from "@prisma/client";
-
 export type StockUbicacion = {
   id_stock_ubicacion: number;
   id_ubicacion: number;
@@ -42,7 +40,6 @@ export type UbicacionesResponse = {
   }[];
 };
 
-
 export type StockUbicacionesResponse = {
   message: string;
   status: number;
@@ -67,3 +64,22 @@ export type StockItem = {
   };
 };
 
+export type StockEmpleadoItem = {
+  id_stock_ubicacion: number;
+  id_ubicacion: number;
+  id_producto: number;
+  cantidad_ubicacion: number;
+  productos: {
+    id_producto: number;
+    nombre: string;
+    id_categoria: number;
+    description: string;
+  };
+  ubicacion: {
+    id_ubicacion: number;
+    nombre: string;
+    capacidad: number;
+  };
+};
+
+export type StockEmpleadoResponse = StockEmpleadoItem[];
