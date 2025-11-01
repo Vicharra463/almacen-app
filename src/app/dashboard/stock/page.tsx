@@ -7,10 +7,8 @@ export default function StockUbicacionPage() {
   const [stock, setStock] = useState<StockEmpleadoResponse>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Estados de paginación
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 10;
+  const [paginaActual, setPaginaActual] = useState(1);
+  const porPagina = 14;
 
   useEffect(() => {
     const fetchStock = async () => {
@@ -18,17 +16,7 @@ export default function StockUbicacionPage() {
 
       try {
         const res = await fetch("/api/empleado/stock");
-
-        console.log("📡 Respuesta HTTP:", res);
-
-        if (!res.ok) {
-          console.error("❌ Error HTTP:", res.status, res.statusText);
-          throw new Error(`Error HTTP ${res.status}: ${res.statusText}`);
-        }
-
         const data = await res.json();
-        console.log("📦 Datos JSON recibidos:", data);
-
         const stockData = Array.isArray(data)
           ? data
           : Array.isArray(data?.data)
@@ -54,47 +42,10 @@ export default function StockUbicacionPage() {
     fetchStock();
   }, []);
 
-  // Cálculos de paginación
-  const totalPages = Math.ceil(stock.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = stock.slice(startIndex, endIndex);
-
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5;
-    
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-    
-    return pages;
-  };
+  const indexInicio = (paginaActual - 1) * porPagina;
+  const indexFin = indexInicio + porPagina;
+  const paginaData = stock.slice(indexInicio, indexFin);
+  const totalPaginas = Math.ceil(stock.length / porPagina);
 
   if (loading)
     return (
@@ -137,49 +88,41 @@ export default function StockUbicacionPage() {
     );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        📦 Stock por ubicación
-      </h1>
-
-      <div className="mb-4 text-gray-600">
-        Mostrando {startIndex + 1} - {Math.min(endIndex, stock.length)} de {stock.length} registros
+    <div className="p-8 bg-white h-full">
+      <div className="pb-11">
+        <h1 className="text-2xl font-bold pb-8">Stock por ubicación</h1>
       </div>
-
-      <div className="overflow-x-auto bg-white rounded-2xl shadow-md border">
-        <table className="min-w-full border-collapse text-left">
-          <thead className="bg-gray-100 text-gray-700">
+      <div className="flex bg-white">
+        <table className="table-auto border border-blue-300 w-full">
+          <thead className="bg-indigo-100">
             <tr>
-              <th className="p-3 border-b font-semibold text-center">#</th>
-              <th className="p-3 border-b font-semibold">Producto</th>
-              <th className="p-3 border-b font-semibold">Descripción</th>
-              <th className="p-3 border-b font-semibold">Ubicación</th>
-              <th className="p-3 border-b font-semibold text-center">
-                Cantidad
-              </th>
-              <th className="p-3 border-b font-semibold text-center">
-                Capacidad
-              </th>
+              <th className="border border-blue-300 p-2">ID</th>
+              <th className="border border-blue-300 p-2">Producto</th>
+              <th className="border border-blue-300 p-2">Descripción</th>
+              <th className="border border-blue-300 p-2">Ubicación</th>
+              <th className="border border-blue-300 p-2">Cantidad</th>
+              <th className="border border-blue-300 p-2">Capacidad</th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((item) => (
-              <tr
-                key={item.id_stock_ubicacion}
-                className="hover:bg-gray-50 transition"
-              >
-                <td className="p-3 border-b text-center">
+            {paginaData.map((item) => (
+              <tr key={item.id_stock_ubicacion}>
+                <td className="border border-blue-300 p-2 text-center">
                   {item.id_stock_ubicacion}
                 </td>
-                <td className="p-3 border-b">{item.productos.nombre}</td>
-                <td className="p-3 border-b text-gray-600">
+                <td className="border border-blue-300 p-2">
+                  {item.productos.nombre}
+                </td>
+                <td className="border border-blue-300 p-2">
                   {item.productos.description}
                 </td>
-                <td className="p-3 border-b">{item.ubicacion.nombre}</td>
-                <td className="p-3 border-b text-center">
+                <td className="border border-blue-300 p-2">
+                  {item.ubicacion.nombre}
+                </td>
+                <td className="border border-blue-300 p-2 text-center">
                   {item.cantidad_ubicacion}
                 </td>
-                <td className="p-3 border-b text-center">
+                <td className="border border-blue-300 p-2 text-center">
                   {item.ubicacion.capacidad}
                 </td>
               </tr>
@@ -188,43 +131,28 @@ export default function StockUbicacionPage() {
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="mt-6 flex justify-center items-center space-x-2">
-          <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-2 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-          >
-            Anterior
-          </button>
+      {/* Controles de paginación */}
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          onClick={() => setPaginaActual((p) => Math.max(p - 1, 1))}
+          disabled={paginaActual === 1}
+          className="cursor-pointer px-4 py-2 bg-indigo-100 text-indigo-700 rounded disabled:opacity-50"
+        >
+          ← Anterior
+        </button>
 
-          {getPageNumbers().map((page, index) => (
-            page === '...' ? (
-              <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
-            ) : (
-              <button
-                key={page}
-                onClick={() => goToPage(page as number)}
-                className={`px-3 py-2 rounded-lg border transition ${
-                  currentPage === page
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                {page}
-              </button>
-            )
-          ))}
+        <span>
+          Página <strong>{paginaActual}</strong> de {totalPaginas}
+        </span>
 
-          <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-          >
-            Siguiente
-          </button>
-        </div>
-      )}
+        <button
+          onClick={() => setPaginaActual((p) => Math.min(p + 1, totalPaginas))}
+          disabled={paginaActual === totalPaginas}
+          className="cursor-pointer px-4 py-2 bg-indigo-100 text-indigo-700 rounded disabled:opacity-50"
+        >
+          Siguiente →
+        </button>
+      </div>
     </div>
   );
 }

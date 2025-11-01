@@ -5,7 +5,7 @@ dotenv.config();
 
 const SecretKey = process.env.JWT_SECRET_KEY || "123456";
 
-//Se crea el token de autenticacion para la el middleware de las rutas
+
 export function singToken(payload: object) {
   return jwt.sign(payload, SecretKey);
 }
@@ -14,14 +14,14 @@ interface DecodedToken {
   id: number;
 }
 
-// Tipo del usuario que devuelve la verificación
+
 export interface UserToken {
   id: number;
   role: string;
   Usuario: string;
 }
 
-//Se verifica la creacion del token verificando si contiene el id del usuario
+
 export async function verifyToken(token: string): Promise<UserToken | null> {
   try {
     const decoded = jwt.verify(token, SecretKey) as DecodedToken;

@@ -30,75 +30,87 @@ export default function Movimientos() {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold text-center mt-4">
-        Movimientos de Stock
-      </h2>
+    <div className="p-8 bg-white h-full">
+  <div className="pb-11">
+    <h1 className="text-2xl font-bold pb-8">Movimientos de Stock</h1>
+  </div>
+  <div className="flex bg-white">
+    <table className="table-auto border border-blue-300 w-full">
+      <thead className="bg-indigo-100">
+        <tr>
+          <th className="border border-blue-300 p-2">Tipo</th>
+          <th className="border border-blue-300 p-2">Cantidad</th>
+          <th className="border border-blue-300 p-2">Observaciones</th>
+          <th className="border border-blue-300 p-2">Producto</th>
+          <th className="border border-blue-300 p-2">Categoría</th>
+          <th className="border border-blue-300 p-2">Usuario</th>
+          <th className="border border-blue-300 p-2">Empleado</th>
+          <th className="border border-blue-300 p-2">Rol</th>
+        </tr>
+      </thead>
+      <tbody>
+        {currentData.map((item, index) => (
+          <tr key={index}>
+            <td className="border border-blue-300 p-2 text-center">
+              {item.tipo_movimiento}
+            </td>
+            <td className="border border-blue-300 p-2 text-center">
+              {item.cantidad_movida}
+            </td>
+            <td className="border border-blue-300 p-2">
+              {item.observaciones}
+            </td>
+            <td className="border border-blue-300 p-2">
+              {item.productos.nombre}
+            </td>
+            <td className="border border-blue-300 p-2">
+              {item.productos.categoria.nombre}
+            </td>
+            <td className="border border-blue-300 p-2">
+              {item.usuarios.users}
+            </td>
+            <td className="border border-blue-300 p-2">
+              {item.usuarios.empleado.map((emp, i) => (
+                <div key={i}>
+                  {emp.nombre} {emp.apellido}
+                </div>
+              ))}
+            </td>
+            <td className="border border-blue-300 p-2 text-center">
+              {item.usuarios.empleado.map((emp, i) => (
+                <div key={i}>
+                  <strong>{emp.rol}</strong>
+                </div>
+              ))}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 
-      <div className="flex flex-col items-center min-h-screen p-4">
-        <table
-          className="table-auto border border-blue-300 min-w-max text-center
-          [&_th]:p-3 [&_td]:p-3 bg-white"
-        >
-          <thead className="bg-indigo-100">
-            <tr>
-              <th className="border border-blue-300 p-2">Tipo</th>
-              <th className="border border-blue-300 p-2">Cantidad</th>
-              <th className="border border-blue-300 p-2">Observaciones</th>
-              <th className="border border-blue-300 p-2">Producto</th>
-              <th className="border border-blue-300 p-2">Categoria</th>
-              <th className="border border-blue-300 p-2">Usuario</th>
-              <th className="border border-blue-300 p-2">Empleado</th>
-              <th className="border border-blue-300 p-2">Rol</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index} className="border p-3 rounded text-center">
-                <td>{item.tipo_movimiento}</td>
-                <td>{item.cantidad_movida}</td>
-                <td>{item.observaciones}</td>
-                <td>{item.productos.nombre}</td>
-                <td>{item.productos.categoria.nombre}</td>
-                <td>{item.usuarios.users}</td>
-                {item.usuarios.empleado.map((emp, i) => (
-                  <td key={i}>
-                    {emp.nombre} {emp.apellido}
-                  </td>
-                ))}
-                {item.usuarios.empleado.map((emp, i) => (
-                  <td key={i}>
-                    <strong>{emp.rol}</strong>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  {/* Controles de paginación */}
+  <div className="flex justify-center items-center gap-4 mt-6">
+    <button
+      onClick={() => goToPage(currentPage - 1)}
+      disabled={currentPage === 1}
+      className="cursor-pointer px-4 py-2 bg-indigo-100 text-indigo-700 rounded disabled:opacity-50"
+    >
+      ← Anterior
+    </button>
 
-        {/* 🔹 Controles de paginación */}
-        <div className="flex items-center gap-3 mt-6">
-          <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
-          >
-            ⬅️ Anterior
-          </button>
+    <span>
+      Página <strong>{currentPage}</strong> de {totalPages}
+    </span>
 
-          <span className="text-gray-700 font-medium">
-            Página {currentPage} de {totalPages}
-          </span>
-
-          <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
-          >
-            Siguiente ➡️
-          </button>
-        </div>
-      </div>
-    </div>
+    <button
+      onClick={() => goToPage(currentPage + 1)}
+      disabled={currentPage === totalPages}
+      className="cursor-pointer px-4 py-2 bg-indigo-100 text-indigo-700 rounded disabled:opacity-50"
+    >
+      Siguiente →
+    </button>
+  </div>
+</div>
   );
 }
